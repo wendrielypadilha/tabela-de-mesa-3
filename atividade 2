@@ -1,0 +1,30 @@
+class Program
+{
+    static void Main(string[] args)
+    {
+
+        int meses = 8;
+        double dias = 10;
+
+
+        double[] valoresInvestidos = { 1000, 5500, 12000 };
+        double[] taxasJuros = { 3.0, 2.48, 2.0 };
+
+
+        Console.WriteLine("Valor Presente\tTaxa de Juros  Período(meses)\tValor Futuro");
+        Console.WriteLine("-------------------------------------------------------");
+
+
+        for (int i = 0; i < valoresInvestidos.Length; i++)
+        {
+            Investimento investimento = new Investimento(valoresInvestidos[i], taxasJuros[i], meses, dias);
+            double rendimentoFuturo = investimento.CalcularRendimentoFuturo();
+
+
+            Console.WriteLine($"R$ {valoresInvestidos[i]:F2}\t{taxasJuros[i]:F2}%\t           {meses}\t\tR$ {rendimentoFuturo:F2}");
+
+            Console.ReadLine();
+
+        }
+    }
+}
