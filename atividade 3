@@ -1,0 +1,57 @@
+using System;
+class Investimento
+{
+    public double ValorInicial { get; set; }
+    public double TaxaJurosMensal { get; set; }
+    public int Meses { get; set; }
+    public double Dias { get; set; }
+    public Investimento(double valorInicial, double taxaJurosMensal, int meses, double dias)
+    {
+        ValorInicial = valorInicial;
+        TaxaJurosMensal = taxaJurosMensal / 100; Meses = meses;
+        Dias = dias;
+    }
+    public double CalcularRendimentoFuturo()
+    {
+        double rendimentoFuturo = ValorInicial * Math.Pow(1 + TaxaJurosMensal, Meses); double taxaJurosDiaria = TaxaJurosMensal / 30;
+        rendimentoFuturo *= (1 + taxaJurosDiaria * Dias); return rendimentoFuturo;
+    }
+    public double CalcularMontante(int meses)
+    {
+        return ValorInicial * Math.Pow(1 + TaxaJurosMensal, meses);
+    }
+    public double CalcularMontanteAposResgate(int mesResgate, int mesesTotal)
+    {
+        double montanteAntesResgate = CalcularMontante(mesResgate);
+        return montanteAntesResgate * Math.Pow(1 + TaxaJurosMensal, mesesTotal - mesResgate);
+    }
+    public double MontanteFinal(int mesesTotal, int mesResgate)
+    {
+        return CalcularMontanteAposResgate(mesResgate, mesesTotal);
+    }
+}
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.Write("Informe o valor do investimento inicial: ");
+        double valorInicial = Convert.ToDouble(Console.ReadLine());
+        Console.Write("Informe a taxa de juros mensal (em %): "); double taxaJurosMensal = Convert.ToDouble(Console.ReadLine());
+        Console.Write("Informe o número de meses: ");
+        int meses = Convert.ToInt32(Console.ReadLine());
+        Console.Write("Informe o número de dias: "); double dias = Convert.ToDouble(Console.ReadLine());
+        Investimento investimento = new Investimento(valorInicial, taxaJurosMensal, meses, dias);
+        double rendimentoFuturo = investimento.CalcularRendimentoFuturo();
+        Console.WriteLine($"\nO rendimento futuro após {meses} meses e {dias} dias é: R$ {rendimentoFuturo:F2}");
+        Console.WriteLine("\n+------+-----------------+"); Console.WriteLine("| Mês  | Montante (R$)  |");
+        Console.WriteLine("+------+-----------------+");
+        for (int mes = 1; mes <= meses; mes++)
+        {
+            double montante = investimento.CalcularMontante(mes); Console.WriteLine($"| {mes,-4} | {montante,-15:F2} |");
+        }
+        Console.WriteLine("+------+-----------------+");
+        int mesResgate = meses / 2; double montanteFinal = investimento.MontanteFinal(meses, mesResgate);
+        Console.WriteLine($"\nPós resgate no {mesResgate}º mês: R$ {montanteFinal:F2}");
+        Console.WriteLine("\nPressione Enter para sair..."); Console.ReadLine();
+    }
+}
